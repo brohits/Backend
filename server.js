@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
-const cors = require('cors'); // Import CORS
+const corsConfig = require('./middleware/corsConfig'); // Import CORS
 const adminRoutes = require('./routes/admin');
 const app = express();
 
@@ -10,7 +10,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(corsConfig);
 
 // Routes
 app.use('/api/auth', authRoutes);

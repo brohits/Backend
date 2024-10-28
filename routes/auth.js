@@ -49,4 +49,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Admin sign-up route
+router.post('/admin/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).json({ msg: 'Admin already exists' });
+
+    user = new User({ name, email, password, role: 'admin' });
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    const payload = { userId: user.id, role: user.role };
+    const token = jwt.sign(payload, 'yourSecretKey', { expiresIn: '1h' });
+
+    res.json({ token });
+  } catch (err) {
+    console.error('Admin sign-up error:', err);
+  }
+});
+
 module.exports = router;

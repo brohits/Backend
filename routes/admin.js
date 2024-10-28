@@ -1,10 +1,11 @@
 // routes/admin.js
 const express = require('express');
 const Student = require('../models/student');
+const authAdmin = require('../middleware/authadmin');
 const router = express.Router();
 
-// Get all students
-router.get('/students', async (req, res) => {
+// Protected admin route
+router.get('/students', authAdmin, async (req, res) => {
     try {
         const students = await Student.find();
         res.json(students);
